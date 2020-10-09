@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
@@ -45,11 +46,11 @@ Request request = new Request.Builder()
     protected String doInBackground(String... strings) {
          try {
 
-             OkHttpClient client = new OkHttpClient();
+     /*        OkHttpClient client = new OkHttpClient();
              RequestBody formBody = new FormBody.Builder()
                      .add("email", emailString) // A sample POST field
                      .add("comment", commentString) // Another sample POST field
-                     .build();
+                     .build();*/
 
 
 
