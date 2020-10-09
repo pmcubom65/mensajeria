@@ -57,10 +57,23 @@ public class Autenticacion extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_autenticacion);
 
+        // Permisos para leer el número de telefono
+        getPermisosLeerTelefono();
 
+
+        // Permisos para leer la agenda de contactos
         getContactPermission();
+
+
+    /*    IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+        registerReceiver(smsVerificationReceiver, intentFilter)*/
+
+
+        // Recuperamos contactos en un ArrayList
         ArrayList<Usuario> listadocontactos=getContactList();
 
+
+        // Iniciamos intent para mostrar los contactos
         Intent intent = new Intent(this, MostrarContactos.class);
         Bundle args = new Bundle();
         args.putSerializable("ARRAYLIST",(Serializable) listadocontactos);
@@ -70,16 +83,6 @@ public class Autenticacion extends AppCompatActivity {
 
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS);
 
-
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_NUMBERS}, REQUEST_READ_PHONE_STATE);
-        } else {
-            tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-            tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-            seguir(tMgr.getLine1Number().toString());
-         //   getPermissionToReadSMS();
-
-        }
 
 
    /*    tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
@@ -91,6 +94,21 @@ public class Autenticacion extends AppCompatActivity {
 
         }*/
 
+    }
+
+
+
+    public void getPermisosLeerTelefono() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_NUMBERS}, REQUEST_READ_PHONE_STATE);
+        } else {
+
+            tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+            seguir(tMgr.getLine1Number().toString());
+            //   getPermissionToReadSMS();
+
+        }
     }
 
 
@@ -225,8 +243,10 @@ public class Autenticacion extends AppCompatActivity {
     }
 
    public void smsRetriever(String telefono) {
-       SmsRetrieverClient client = SmsRetriever.getClient(this /* context */);
-       Task<Void> task = client.startSmsRetriever();
+   //    SmsRetrieverClient client = SmsRetriever.getClient(this /* context */);
+       SmsRetriever.getClient(this).startSmsUserConsent(telefono);
+
+      /* Task<Void> task = client.startSmsRetriever();
        task.addOnSuccessListener(new OnSuccessListener<Void>() {
            @Override
            public void onSuccess(Void aVoid) {
@@ -241,6 +261,6 @@ public class Autenticacion extends AppCompatActivity {
                // Failed to start retriever, inspect Exception for more details
                // ...
            }
-       });
+       });*/
     }
 }
