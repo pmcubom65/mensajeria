@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,21 @@ public class MostrarContactos extends AppCompatActivity {
 
 
         recyclerView=findViewById(R.id.miscontactos);
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        System.out.println("click item");
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                })
+        );
 
         recyclerView.setHasFixedSize(true);
         layoutManager=new LinearLayoutManager(this);

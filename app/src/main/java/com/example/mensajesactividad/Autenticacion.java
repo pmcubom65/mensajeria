@@ -9,10 +9,13 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -31,6 +34,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -202,8 +206,10 @@ public class Autenticacion extends AppCompatActivity {
                     while (pCur.moveToNext()) {
                         String phoneNo = pCur.getString(pCur.getColumnIndex(
                                 ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        System.out.println( "Name: " + name);
-                        System.out.println( "Name: " + phoneNo);
+                   //     System.out.println( "Name: " + name);
+                    //    System.out.println( "Name: " + phoneNo);
+
+
 
                         listacontactos.add(new Usuario(phoneNo, name));
 

@@ -5,6 +5,15 @@
     android:orientation="vertical">
 
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Elija con quien quiere chatear"
+        android:layout_gravity="center"
+        android:textColor="#000000"
+        android:textSize="20dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/miscontactos"
         android:layout_width="match_parent"
