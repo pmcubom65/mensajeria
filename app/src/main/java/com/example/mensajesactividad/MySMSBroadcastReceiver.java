@@ -15,6 +15,7 @@ import static androidx.core.app.ActivityCompat.startActivityForResult;
 public class MySMSBroadcastReceiver extends BroadcastReceiver {
 //https://blog.mindorks.com/easy-sms-verification-in-android-sms-user-consent-api
     // https://stackoverflow.com/questions/60351109/broadcast-receiver-is-not-receiving-sms-from-google-sms-retriever-api
+    // https://stackoverflow.com/questions/58726014/how-to-automatically-read-sms-in-android
 
     private int SMS_CONSENT_REQUEST = 2;
     Activity activity;
