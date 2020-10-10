@@ -1,6 +1,7 @@
 package com.example.mensajesactividad;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import java.io.Serializable;
 
@@ -8,13 +9,13 @@ public class Usuario implements Serializable {
 
     private String telefono;
     private String nombre;
-    private Bitmap foto;
+    private String uri;
 
 
-    public Usuario(String telefono, String nombre) {
+    public Usuario(String telefono, String nombre, String uri) {
         this.telefono = telefono;
         this.nombre = nombre;
-    //    this.foto=foto;
+        this.uri=uri;
     }
 
 
@@ -35,12 +36,12 @@ public class Usuario implements Serializable {
         this.nombre = nombre;
     }
 
-    public Bitmap getFoto() {
-        return foto;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
-    public void setFoto(Bitmap foto) {
-        this.foto = foto;
+    public String getUri() {
+        return uri;
     }
 
     @Override

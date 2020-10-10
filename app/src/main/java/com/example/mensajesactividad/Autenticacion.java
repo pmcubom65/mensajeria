@@ -9,107 +9,84 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
+
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
-import android.telephony.TelephonyManager;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import android.widget.Toast;
 
 
-import com.google.android.gms.auth.api.phone.SmsRetriever;
-import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Autenticacion extends AppCompatActivity {
+public class Autenticacion extends AppCompatActivity  {
 
-    Button miboton;
-    TextView textotelefono;
-    SmsManager smsManager = SmsManager.getDefault();
-    EditText textoaeditar;
-    TelephonyManager tMgr;
+    Button botonempezar;
 
-    Button botonsms;
+    EditText textoponertelefono;
+
+
     private final int REQUEST_READ_PHONE_STATE=1;
     private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 1;
     private static final int READ_SMS_PERMISSIONS_REQUEST = 1;
+    private static final int SEND_SMS_PERMISSIONS_REQUEST=1;
+    String numerotelefono;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_autenticacion);
 
-        // Permisos para leer el número de telefono
-        getPermisosLeerTelefono();
+        textoponertelefono= findViewById(R.id.confirmar);
+        botonempezar=findViewById(R.id.botonempiece);
 
-
-        // Permisos para leer la agenda de contactos
         getContactPermission();
 
 
-    /*    IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
-        registerReceiver(smsVerificationReceiver, intentFilter)*/
 
-
-        // Recuperamos contactos en un ArrayList
-        ArrayList<Usuario> listadocontactos=getContactList();
-
-
-        // Iniciamos intent para mostrar los contactos
-        Intent intent = new Intent(this, MostrarContactos.class);
-        Bundle args = new Bundle();
-        args.putSerializable("ARRAYLIST",(Serializable) listadocontactos);
-        intent.putExtra("BUNDLE",args);
-        startActivity(intent);
-
-
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS);
+  //    getPermissionToSendSMS();
 
 
 
-   /*    tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_NUMBERS}, REQUEST_READ_PHONE_STATE);
-        } else {
-            getPermissionToReadSMS();
+        botonempezar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (textoponertelefono.getText().toString().length()>0) {
+                    numerotelefono=textoponertelefono.getText().toString();
+                    smsToken();
+                }else {
+                    String salida="Número no válido";
+                    mostrarError(salida);
+                }
+            }
+        });
 
-        }*/
 
     }
 
 
 
-    public void getPermisosLeerTelefono() {
+  /*  public void getPermisosLeerTelefono() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_NUMBERS}, REQUEST_READ_PHONE_STATE);
         } else {
-
-            tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-            seguir(tMgr.getLine1Number().toString());
-            //   getPermissionToReadSMS();
-
+            String salida="Permisos Rechazados";
+            mostrarError(salida);
         }
-    }
+    }*/
 
 
     public void getContactPermission() {
@@ -119,88 +96,25 @@ public class Autenticacion extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, READ_CONTACTS_PERMISSIONS_REQUEST);
 
         } else {
-            System.out.println("Permisisos de sms");
-         //   seguir(tMgr.getLine1Number().toString());
-
+            getContactList();
         }
     }
 
-
-
-
-    public void getPermissionToReadSMS() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void getPermissionToSendSMS() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, READ_SMS_PERMISSIONS_REQUEST);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, SEND_SMS_PERMISSIONS_REQUEST);
 
-        } else {
-            System.out.println("Permisisos de sms");
-            seguir(tMgr.getLine1Number().toString());
-
+        }else {
+            smsToken();
         }
     }
 
 
 
-    public void seguir(String telefono) {
-
-        textotelefono=findViewById(R.id.textotelefono);
-        textotelefono.setText("Tu número de telefono es " +telefono);
-        smsRetriever(telefono);
-
-        Context c= this;
-
-        textoaeditar =(EditText) findViewById(R.id.textoanadir);
-
-        miboton=(Button) findViewById(R.id.botonempiece);
-
-        botonsms= (Button) findViewById(R.id.botonenviarsms);
-
-        botonsms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(c, Manifest.permission.SEND_SMS)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    getPermissionToReadSMS();
-                }else {
-                    smsManager.sendTextMessage(textoaeditar.getText().toString(), null, "mensaje sms", null, null);
-                }
-
-            }
-        });
-
-
-
-
-        miboton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(Autenticacion.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_READ_PHONE_STATE:
-                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    //TODO
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-
-
-
-    private ArrayList<Usuario> getContactList() {
+    private void getContactList() {
         ArrayList<Usuario> listacontactos=new ArrayList<>();
 
         ContentResolver cr = getContentResolver();
@@ -214,6 +128,8 @@ public class Autenticacion extends AppCompatActivity {
                 String name = cur.getString(cur.getColumnIndex(
                         ContactsContract.Contacts.DISPLAY_NAME));
 
+                Uri my_contact_Uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(id));
+
                 if (cur.getInt(cur.getColumnIndex(
                         ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
                     Cursor pCur = cr.query(
@@ -224,12 +140,12 @@ public class Autenticacion extends AppCompatActivity {
                     while (pCur.moveToNext()) {
                         String phoneNo = pCur.getString(pCur.getColumnIndex(
                                 ContactsContract.CommonDataKinds.Phone.NUMBER));
-                   //     System.out.println( "Name: " + name);
-                    //    System.out.println( "Name: " + phoneNo);
+                        System.out.println( "Name: " + name);
+                       System.out.println( "Name: " + phoneNo);
 
+                        System.out.println( "my_contact_Uri: " + my_contact_Uri);
 
-
-                        listacontactos.add(new Usuario(phoneNo, name));
+                        listacontactos.add(new Usuario(phoneNo, name, my_contact_Uri.toString()));
 
                     }
                     pCur.close();
@@ -239,28 +155,53 @@ public class Autenticacion extends AppCompatActivity {
         if(cur!=null){
             cur.close();
         }
-        return listacontactos;
+        Intent intent=new Intent(this, MostrarContactos.class);
+        Bundle args = new Bundle();
+        args.putSerializable("ARRAYLIST",(Serializable) listacontactos);
+        intent.putExtra("BUNDLE",args);
+        startActivity(intent);
     }
 
-   public void smsRetriever(String telefono) {
-   //    SmsRetrieverClient client = SmsRetriever.getClient(this /* context */);
-       SmsRetriever.getClient(this).startSmsUserConsent(telefono);
 
-      /* Task<Void> task = client.startSmsRetriever();
-       task.addOnSuccessListener(new OnSuccessListener<Void>() {
-           @Override
-           public void onSuccess(Void aVoid) {
-               // Successfully started retriever, expect broadcast intent
-               // ...
-           }
-       });
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void smsToken() {
+        SmsManager smsManager = SmsManager.getDefault();
 
-       task.addOnFailureListener(new OnFailureListener() {
-           @Override
-           public void onFailure(@NonNull Exception e) {
-               // Failed to start retriever, inspect Exception for more details
-               // ...
-           }
-       });*/
+        String appSmsToken= smsManager.createAppSpecificSmsToken(createSmsTokenPendingIntent());
+
+        smsManager.sendTextMessage(numerotelefono, null, "Hola!, autenticación correcta", null, null);
+        smsManager.sendTextMessage(numerotelefono, null, appSmsToken, null, null);
+    }
+
+
+    private PendingIntent createSmsTokenPendingIntent() {
+        return PendingIntent.getActivity(this, 1234, new Intent(this, SmsTokenResultVerificationActivity.class),0);
+    }
+
+
+
+   public void mostrarError(String error){
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS)
+                == PackageManager.PERMISSION_GRANTED){
+
+            getContactList();
+        }  else if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.SEND_SMS)
+                == PackageManager.PERMISSION_GRANTED){
+
+            smsToken();
+
+        }else {
+            String salida="Permisos Rechazados";
+            mostrarError(salida);
+        }
     }
 }

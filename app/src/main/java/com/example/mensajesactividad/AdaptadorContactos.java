@@ -1,6 +1,7 @@
 package com.example.mensajesactividad;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,28 +11,32 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class AdaptadorContactos extends RecyclerView.Adapter<AdaptadorContactos.ViewHolder> {
 
 
     private ArrayList<Usuario> datos;
-
+    // variable to hold context
+    private Context context;
 
     public AdaptadorContactos(Context context, ArrayList<Usuario> list) {
         datos=list;
+        this.context=context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView contacto1,contacto2;
-
+        ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             contacto1=itemView.findViewById(R.id.contacto1);
             contacto2=itemView.findViewById(R.id.contacto2);
-
+            imageView=itemView.findViewById(R.id.imageView);
         }
     }
 
@@ -55,6 +60,10 @@ public class AdaptadorContactos extends RecyclerView.Adapter<AdaptadorContactos.
    //     holder.foto.setImageBitmap(datos.get(position).getFoto());
         holder.contacto1.setText(datos.get(position).getNombre().toString());
         holder.contacto2.setText(datos.get(position).getTelefono().toString());
+
+        Glide.with(context).load(Uri.parse(datos.get(position).getUri())).into(holder.imageView);
+
+
     }
 
     @Override

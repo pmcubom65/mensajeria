@@ -7,39 +7,16 @@
 
 
 
-
-
-    <TextView
-        android:id="@+id/textotelefono"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:text=""
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:layout_gravity="center_vertical"
-   />
-
-
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/confirmar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Escriba el telefono del destinatario del chat"
+        android:hint="Confirme su número de Teléfono"
         android:layout_gravity="center_vertical"
         />
-
-
-    <Button
-        android:id="@+id/botonenviarsms"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-
-        android:text="Enviar SMS" />
 
 
     <Button
@@ -48,6 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
 
-        android:text="Comenzar Chat" />
+        android:text="Iniciar Autenticación" />
 
 </LinearLayout>
