@@ -17,17 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SmsTokenResultVerificationActivity"></activity>
         <activity android:name=".MostrarContactos" />
 
-        <receiver
-            android:name=".MySMSBroadcastReceiver"
-            android:exported="true"
-            android:permission="com.google.android.gms.auth.api.phone.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
-            </intent-filter>
-        </receiver>
+
 
         <activity android:name=".MainActivity" />
         <activity android:name=".Autenticacion">

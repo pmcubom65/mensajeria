@@ -2,8 +2,12 @@ package com.example.mensajesactividad;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Usuario implements Serializable {
 
@@ -42,6 +46,20 @@ public class Usuario implements Serializable {
 
     public String getUri() {
         return uri;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(telefono, usuario.telefono);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(telefono);
     }
 
     @Override

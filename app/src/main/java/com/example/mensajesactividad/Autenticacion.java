@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Autenticacion extends AppCompatActivity  {
 
@@ -155,6 +157,12 @@ public class Autenticacion extends AppCompatActivity  {
         if(cur!=null){
             cur.close();
         }
+
+        Set<Usuario> set = new HashSet<>(listacontactos);
+        listacontactos.clear();
+        listacontactos.addAll(set);
+
+
         Intent intent=new Intent(this, MostrarContactos.class);
         Bundle args = new Bundle();
         args.putSerializable("ARRAYLIST",(Serializable) listacontactos);
@@ -175,7 +183,7 @@ public class Autenticacion extends AppCompatActivity  {
 
 
     private PendingIntent createSmsTokenPendingIntent() {
-        return PendingIntent.getActivity(this, 1234, new Intent(this, SmsTokenResultVerificationActivity.class),0);
+        return PendingIntent.getActivity(this, 1234, new Intent(this, MostrarContactos.class),0);
     }
 
 

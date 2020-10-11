@@ -2,17 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
 
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:text="Elija con quien quiere chatear"
-        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="#000000"
-        android:textSize="20dp"/>
+        android:textSize="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"/>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/miscontactos"

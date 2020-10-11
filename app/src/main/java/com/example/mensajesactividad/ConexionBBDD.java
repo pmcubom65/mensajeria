@@ -12,12 +12,12 @@ import java.sql.SQLException;
 public class ConexionBBDD {
 
     private static final String LOG = "DEBUG";
-    private static String ip = "10.1.50.21";
-    private static String port = "1433";
+    private static String ip = "localhost";
+    private static String port = "3306";
     private static String classs = "net.sourceforge.jtds.jdbc.Driver";
     private static String db = "SMARTLABS_CHAT";
-    private static String un = "sa";
-    private static String password = "admin";
+    private static String un = "root";
+    private static String password = "";
     private static Connection conn = null;
     private static String ConnURL = null;
 
