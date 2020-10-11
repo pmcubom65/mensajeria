@@ -1,7 +1,6 @@
 package com.example.mensajesactividad;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
+
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -57,6 +56,7 @@ public class Usuario implements Serializable {
         return Objects.equals(telefono, usuario.telefono);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public int hashCode() {
         return Objects.hash(telefono);

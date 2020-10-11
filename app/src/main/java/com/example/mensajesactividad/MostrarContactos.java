@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -77,6 +77,7 @@ public class MostrarContactos extends AppCompatActivity {
                         System.out.println(id);
                         System.out.println(inicio);
                         crearChat(id, inicio);
+
                     }
 
                     @Override
@@ -120,5 +121,7 @@ public class MostrarContactos extends AppCompatActivity {
             }
         };
         requestQueue.add(request);
+        Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 }

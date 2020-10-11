@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
 
+    android:gravity="center_horizontal|bottom"
+    android:background="@drawable/sky"
     >
 
 
@@ -25,18 +27,39 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-
-    <EditText
-        android:id="@+id/textoanadir"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Escriba mensaje" />
+        android:orientation="horizontal"
+        android:gravity="center_horizontal|bottom"
+        android:layout_marginBottom="10dp"
+        >
 
-    <Button
-        android:id="@+id/botonmandarmensaje"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Mandar Mensaje" />
+        <EditText
+            android:id="@+id/textoanadir"
+            android:textColorHint="#ffffff"
+            android:textColorHighlight="#ffffff"
+            android:shadowColor="#ffffff"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textColor="#ffffff"
+            android:hint="Escriba mensaje para enviar" />
+
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/botonmandarmensaje"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:srcCompat="@android:drawable/ic_menu_send" />
+
+    </LinearLayout>
+
+
+
 
 </LinearLayout>

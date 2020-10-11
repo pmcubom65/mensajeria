@@ -13,11 +13,14 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -27,13 +30,13 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<String> datosAmostrar;
-    private Button botonenviar;
+    private FloatingActionButton botonenviar;
     private TextView textoenviar;
 
     private final String canal="5555";
     private final int notificationid=001;
 
-    ConexionBBDD conexionBBDD;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +47,18 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setHasFixedSize(false);
 
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
         recyclerView.setLayoutManager(layoutManager);
 
         final ArrayList<String> myDataset = new ArrayList<>()  ;
 
 
-
-        System.out.println(myDataset);
-
         mAdapter = new MyAdapter(this, myDataset);
         recyclerView.setAdapter(mAdapter);
 
-
-
-        botonenviar=(Button) findViewById(R.id.botonmandarmensaje);
+        botonenviar=(FloatingActionButton) findViewById(R.id.botonmandarmensaje);
         textoenviar=(TextView) findViewById(R.id.textoanadir);
-
-        conexionBBDD=new ConexionBBDD();
 
         botonenviar.setOnClickListener(new View.OnClickListener() {
             @Override
