@@ -16,6 +16,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -41,11 +42,14 @@ public class MostrarContactos extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerView.Adapter myAdapter;
     RecyclerView.LayoutManager layoutManager;
-
+    String urlcrearusuario="http://192.168.1.39/api/crearusuario.php";
 
     RequestQueue requestQueue;
-    String insertchat="http://192.168.1.38/api/crearchat.php";
-    String showchat="http://192.168.1.38/api/chats_service.php";
+    String insertchat="http://192.168.1.39/api/crearchat.php";
+    String showchat="http://192.168.1.39/api/chats_service.php";
+
+    public static String chat_id_empiece;
+    public static String telefono_chat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +76,14 @@ public class MostrarContactos extends AppCompatActivity {
                         LocalDateTime fechaactual= LocalDateTime.now();
                         ZonedDateTime zdt = fechaactual.atZone(ZoneId.of("Europe/Andorra"));
                         String id= String.valueOf(zdt.toInstant().toEpochMilli());
+
                         DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                         String inicio=fechaactual.format(dtf);
-                        System.out.println(id);
-                        System.out.println(inicio);
+
+                        guardarUsuario(contactos.get(position).getTelefono().toString().replaceAll("[\\D]", ""), contactos.get(position).getNombre().toString());
+
+                        telefono_chat=contactos.get(position).getTelefono().toString().replaceAll("[\\D]", "");
+
                         crearChat(id, inicio);
 
                     }
@@ -116,12 +124,45 @@ public class MostrarContactos extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parameters=new HashMap<>();
                 parameters.put("chat_id",id);
+
                 parameters.put("inicio", inicio);
                 return parameters;
             }
         };
+
         requestQueue.add(request);
         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("chat_id", id);
         startActivity(intent);
+    }
+
+
+
+
+    private void guardarUsuario(String telefono, String nombre) {
+        StringRequest request=new StringRequest(Request.Method.POST, urlcrearusuario, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters=new HashMap<>();
+                parameters.put("telefono", telefono);
+                parameters.put("nombre", nombre);
+                return parameters;
+            }
+        };
+
+
+        requestQueue.add(request);
     }
 }

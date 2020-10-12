@@ -1,5 +1,6 @@
 package com.example.mensajesactividad;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -17,9 +18,9 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
-    private ArrayList<String> datos;
+    private ArrayList<Mensaje> datos;
 
-    public MyAdapter(Context context, ArrayList<String> list) {
+    public MyAdapter(Context context, ArrayList<Mensaje> list) {
         datos=list;
     }
 
@@ -27,13 +28,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView mitextview;
-
+        public TextView fechayhora;
 
 
         public MyViewHolder(View v) {
             super(v);
             mitextview=v.findViewById(R.id.textView);
-
+            fechayhora=v.findViewById(R.id.fechayhora);
         }
     }
 
@@ -53,12 +54,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
     // Replace the contents of a view (invoked by the layout manager)
+    @SuppressLint("ResourceAsColor")
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
+        LinearLayout.LayoutParams misparametros=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        misparametros.setMarginStart(440);
+
+        if (position%2!=0) {
+            holder.mitextview.setLayoutParams(misparametros);
+            holder.fechayhora.setLayoutParams(misparametros);
+            holder.mitextview.setBackgroundColor(R.color.colorPrimaryDark);
+        }
+
         holder.itemView.setTag(datos.get(position));
 
-        holder.mitextview.setText(datos.get(position).toString());
+
+        holder.mitextview.setText(datos.get(position).getContenido().toString());
+        holder.fechayhora.setText(datos.get(position).getFecha().toString());
 
     }
 

@@ -27,9 +27,31 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Autenticacion extends AppCompatActivity  {
@@ -38,12 +60,15 @@ public class Autenticacion extends AppCompatActivity  {
 
     EditText textoponertelefono;
 
+    EditText ponernombre;
+    RequestQueue requestQueue;
 
     private final int REQUEST_READ_PHONE_STATE=1;
     private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 1;
     private static final int READ_SMS_PERMISSIONS_REQUEST = 1;
     private static final int SEND_SMS_PERMISSIONS_REQUEST=1;
-    String numerotelefono;
+    static String numerotelefono;
+    String urlcrearusuario="http://192.168.1.39/api/crearusuario.php";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -52,11 +77,12 @@ public class Autenticacion extends AppCompatActivity  {
         setContentView(R.layout.activity_autenticacion);
 
         textoponertelefono= findViewById(R.id.confirmar);
+        ponernombre=findViewById(R.id.nombre);
         botonempezar=findViewById(R.id.botonempiece);
 
-        getContactPermission();
 
 
+        requestQueue= Volley.newRequestQueue(getApplicationContext());
 
   //    getPermissionToSendSMS();
 
@@ -65,17 +91,46 @@ public class Autenticacion extends AppCompatActivity  {
         botonempezar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (textoponertelefono.getText().toString().length()>0) {
+                if (textoponertelefono.getText().toString().length()>0 && ponernombre.getText().toString().length()>0) {
                     numerotelefono=textoponertelefono.getText().toString();
-                    smsToken();
+                //    smsToken();
+                    guardarUsuario(numerotelefono.replaceAll("[\\D]", ""), ponernombre.getText().toString());
+                    getContactPermission();
                 }else {
-                    String salida="Número no válido";
+                    String salida="Número o nombre no válido";
                     mostrarError(salida);
                 }
             }
         });
 
 
+    }
+
+    private void guardarUsuario(String telefono, String nombre) {
+        StringRequest request=new StringRequest(Request.Method.POST, urlcrearusuario, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters=new HashMap<>();
+                parameters.put("telefono", telefono);
+                parameters.put("nombre", nombre);
+                return parameters;
+            }
+        };
+
+
+        requestQueue.add(request);
     }
 
 
