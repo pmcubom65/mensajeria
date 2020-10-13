@@ -63,7 +63,7 @@ public class AdaptadorContactos extends RecyclerView.Adapter<AdaptadorContactos.
         holder.contacto2.setText(datos.get(position).getTelefono().toString());
         String ruta=datos.get(position).getUri();
         Glide.with(context).load(Uri.parse(datos.get(position).getUri()))
-                .placeholder(R.drawable.common_google_signin_btn_icon_dark)
+                .placeholder(R.drawable.common_google_signin_btn_icon_dark_normal)
                 .into(holder.imageView);
 
 

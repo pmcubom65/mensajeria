@@ -29,12 +29,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // each data item is just a string in this case
         public TextView mitextview;
         public TextView fechayhora;
+        public TextView telefonodelmensaje;
 
 
         public MyViewHolder(View v) {
             super(v);
             mitextview=v.findViewById(R.id.textView);
             fechayhora=v.findViewById(R.id.fechayhora);
+            telefonodelmensaje=v.findViewById(R.id.telefonodelmensaje);
         }
     }
 
@@ -65,7 +67,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         if (position%2!=0) {
             holder.mitextview.setLayoutParams(misparametros);
             holder.fechayhora.setLayoutParams(misparametros);
-            holder.mitextview.setBackgroundColor(R.color.colorPrimaryDark);
+            holder.telefonodelmensaje.setLayoutParams(misparametros);
+            holder.mitextview.setBackgroundColor(R.color.minaranja);
         }
 
         holder.itemView.setTag(datos.get(position));
@@ -73,6 +76,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         holder.mitextview.setText(datos.get(position).getContenido().toString());
         holder.fechayhora.setText(datos.get(position).getFecha().toString());
+        holder.telefonodelmensaje.setText(datos.get(position).getTelefono().toString());
 
     }
 

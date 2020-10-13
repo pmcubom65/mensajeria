@@ -1,5 +1,11 @@
 package com.example.mensajesactividad;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import java.util.Objects;
+
 public class Mensaje {
 
     private String contenido;
@@ -45,5 +51,22 @@ public class Mensaje {
                 ", fecha='" + fecha + '\'' +
                 ", telefono='" + telefono + '\'' +
                 '}';
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Mensaje mensaje = (Mensaje) o;
+        return Objects.equals(contenido, mensaje.contenido) &&
+                Objects.equals(fecha, mensaje.fecha) &&
+                Objects.equals(telefono, mensaje.telefono);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public int hashCode() {
+        return Objects.hash(contenido, fecha, telefono);
     }
 }

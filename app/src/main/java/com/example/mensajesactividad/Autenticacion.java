@@ -68,7 +68,7 @@ public class Autenticacion extends AppCompatActivity  {
     private static final int READ_SMS_PERMISSIONS_REQUEST = 1;
     private static final int SEND_SMS_PERMISSIONS_REQUEST=1;
     static String numerotelefono;
-    String urlcrearusuario="http://192.168.1.39/api/crearusuario.php";
+    String urlcrearusuario="http://10.0.2.2/api/crearusuario.php";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -84,7 +84,7 @@ public class Autenticacion extends AppCompatActivity  {
 
         requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-  //    getPermissionToSendSMS();
+      //  getPermissionToSendSMS();
 
 
 
@@ -93,7 +93,7 @@ public class Autenticacion extends AppCompatActivity  {
             public void onClick(View v) {
                 if (textoponertelefono.getText().toString().length()>0 && ponernombre.getText().toString().length()>0) {
                     numerotelefono=textoponertelefono.getText().toString();
-                //    smsToken();
+                    smsToken();
                     guardarUsuario(numerotelefono.replaceAll("[\\D]", ""), ponernombre.getText().toString());
                     getContactPermission();
                 }else {
@@ -129,7 +129,22 @@ public class Autenticacion extends AppCompatActivity  {
             }
         };
 
+        request.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(request);
     }
 

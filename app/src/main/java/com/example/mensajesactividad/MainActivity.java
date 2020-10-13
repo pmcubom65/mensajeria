@@ -5,12 +5,14 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.RemoteInput;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -55,10 +57,11 @@ public class MainActivity extends AppCompatActivity {
 
     private final String canal="5555";
     private final int notificationid=001;
+    String KEY_REPLY = "key_reply";
 
-    String urlcrearmensaje="http://192.168.1.39/api/crearmensaje.php";
+    String urlcrearmensaje="http://10.0.2.2/api/crearmensaje.php";
 
-    String urlcargarmensajeschat="http://192.168.1.39/api/mostrarmensajeschat.php";
+    String urlcargarmensajeschat="http://10.0.2.2/api/mostrarmensajeschat.php";
 
     RequestQueue requestQueue;
     String michatid;
@@ -70,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent llegada=getIntent();
         michatid=(String) llegada.getExtras().get("chat_id");
+
 
         System.out.println("chatid creado "+michatid);
 
@@ -118,16 +122,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     public void crearNotificacion() {
 
-        Intent siintent=new Intent(this, MainActivity.class);
+    /*    Intent siintent=new Intent(this, MainActivity.class);
         Intent nointent=new Intent(this, MainActivity.class);
 
        PendingIntent sipendingintent=PendingIntent.getActivity(this,0,siintent,PendingIntent.FLAG_ONE_SHOT);
 
 
 
-        PendingIntent nopendingintent=PendingIntent.getActivity(this,0,nointent,PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent nopendingintent=PendingIntent.getActivity(this,0,nointent,PendingIntent.FLAG_ONE_SHOT);*/
 
         NotificationCompat.Builder notification=new NotificationCompat.Builder(this, canal);
         notification.setSmallIcon(R.drawable.smartlabs);
@@ -137,10 +142,55 @@ public class MainActivity extends AppCompatActivity {
         notification.setContentText(textoenviar.getText().toString());
         notification.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         notification.setAutoCancel(true);
+
+        String replyLabel = "Respuesta: ";
+
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_REPLY)
+                .setLabel(replyLabel)
+                .build();
+
+        // Build a PendingIntent for the reply action to trigger.
+
+        Intent resultIntent = new Intent(this, MyBroadcastReceiver.class);
+        resultIntent.putExtra("chat_id", michatid);
+        resultIntent.putExtra("telefono", Autenticacion.numerotelefono);
+
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        PendingIntent replyPendingIntent =
+                PendingIntent.getBroadcast(getApplicationContext(),
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+
+        //Notification Action with RemoteInput instance added.
+        NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(
+                android.R.drawable.sym_action_chat, "RESPONDER", replyPendingIntent)
+                .addRemoteInput(remoteInput)
+                .setAllowGeneratedReplies(true)
+                .build();
+
+        //Notification.Action instance added to Notification Builder.
+        notification.addAction(replyAction);
+
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("notificationId", notificationid);
+        intent.putExtra("chat_id", michatid);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent dismissIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        notification.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Rechazar", dismissIntent);
+
         //notification.setContentIntent(pendingIntent);
 
-        notification.addAction(R.drawable.round_rect_shape, "Sí", sipendingintent);
-        notification.addAction(R.drawable.round_rect_shape, "No", nopendingintent);
+ //       notification.addAction(R.drawable.round_rect_shape, "Sí", sipendingintent);
+  //      notification.addAction(R.drawable.round_rect_shape, "No", nopendingintent);
 
 
         NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(this);
@@ -216,7 +266,10 @@ public class MainActivity extends AppCompatActivity {
                         Mensaje m=new Mensaje(explrObject.getString("contenido"), explrObject.getString("dia"), explrObject.getString("telefono"));
                         System.out.println(m);
 
-                        datosAmostrar.add(m);
+                        if (!datosAmostrar.contains(m)) {
+                            datosAmostrar.add(m);
+                        }
+
                         mAdapter.notifyItemChanged(i, m);
                     }
 
