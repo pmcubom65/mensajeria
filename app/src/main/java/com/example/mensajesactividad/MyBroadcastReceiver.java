@@ -24,6 +24,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+//http://lessons.livecode.com/m/4069/l/59312-how-do-i-use-push-notifications-with-android
+//https://stackoverflow.com/questions/16386392/android-hello-world-pushnotification-example
+
 public class MyBroadcastReceiver extends BroadcastReceiver {
 
     String KEY_REPLY = "key_reply";
@@ -45,7 +48,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         String telefono=intent.getStringExtra("telefono");
 
         LocalDateTime ahora= LocalDateTime.now();
-        ZonedDateTime zdt = ahora.atZone(ZoneId.of("Europe/Andorra"));
+        ZonedDateTime zdt = ahora.atZone(ZoneId.of("Europe/Madrid"));
 
         DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String dia=ahora.format(dtf);
