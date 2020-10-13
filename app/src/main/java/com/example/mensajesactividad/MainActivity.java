@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
     String urlcargarmensajeschat="http://10.0.2.2/api/mostrarmensajeschat.php";
 
+    String url="https://fcm.googleapis.com/fcm/send";
+
     RequestQueue requestQueue;
     String michatid;
 
@@ -121,6 +123,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
+
+
+
+
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     public void crearNotificacion() {
@@ -304,6 +314,44 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
+
+    public void notificationFirebase()   {
+        //our json object
+        JSONObject mainObj=new JSONObject();
+        String token="";
+        try {
+            mainObj.put("to", token);
+            JSONObject notificationObj=new JSONObject();
+            notificationObj.put("title", "any title");
+            notificationObj.put("body", "any body");
+            mainObj.put("notification", notificationObj);
+            JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url, mainObj, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> header=new HashMap<>();
+                    header.put("content-type", "application/json");
+                    header.put("authorization", "key=AAAAafa8PTg:APA91bEafAQa2vygzlPALqd72Dik0BflDS7b-hCraAwZvzAkK-hLHsohWvsN1C5kHSSym3pdZx5M63COhYBPosP7Icu-JDXguENKkH3fvXco4CXroInSeLadlujJKpUrqoROt1ttGiW0");
+                    return header;
+                }
+            };
+
+            requestQueue.add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
 }
 

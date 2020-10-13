@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +43,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -93,7 +98,34 @@ public class Autenticacion extends AppCompatActivity  {
             public void onClick(View v) {
                 if (textoponertelefono.getText().toString().length()>0 && ponernombre.getText().toString().length()>0) {
                     numerotelefono=textoponertelefono.getText().toString();
-                    smsToken();
+
+                    FirebaseInstanceId.getInstance().getInstanceId()
+                            .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                    if (!task.isSuccessful()) {
+                                        Log.w("TOKEN", "getInstanceId failed", task.getException());
+                                        return;
+                                    }
+
+                                    // Get new Instance ID token
+                                    String token = task.getResult().getToken();
+
+                                    // Log and toast
+                                 //   String msg = getString(R.string.msg_token_fmt, token);
+                                  //  Log.d("TOKEN", msg);
+                                    Toast.makeText(Autenticacion.this, token, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+
+
+
+
+
+
+
+                //    smsToken();
                     guardarUsuario(numerotelefono.replaceAll("[\\D]", ""), ponernombre.getText().toString());
                     getContactPermission();
                 }else {
@@ -282,4 +314,6 @@ public class Autenticacion extends AppCompatActivity  {
             mostrarError(salida);
         }
     }
+
+
 }
