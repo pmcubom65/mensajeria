@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseInstanceService extends FirebaseMessagingService {
 
@@ -16,5 +17,14 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
       //  sendRegistrationToServer(token);
+    }
+
+
+    @Override
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+       System.out.println( "From: " + remoteMessage.getFrom());
+
+
+
     }
 }

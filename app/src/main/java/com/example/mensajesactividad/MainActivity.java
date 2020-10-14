@@ -33,6 +33,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
     RequestQueue requestQueue;
     String michatid;
+    // [START declare_analytics]
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         requestQueue= Volley.newRequestQueue(getApplicationContext());
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         recyclerView.setHasFixedSize(false);
 
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 grabarMensaje(mensaje, id_mensaje);
                 cargarMensajesChat();
 
-
+                notificationFirebase();
                 notificationChannel();
                 crearNotificacion();
             }
@@ -316,11 +320,22 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void notificationFirebase()   {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, michatid);
+   //     bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "String");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+
+
         //our json object
         JSONObject mainObj=new JSONObject();
         String token="";
         try {
-            mainObj.put("to", token);
+
+
+            String tokensegundo="dbMjzbyeRvK7H7X0JPFRml:APA91bGnxgY1r1waKY2Knmbc5kiSjtK12Z_IJkDmjKsJ7YuDvSN5w6phiWoIhGbTeEMOx89_78FUbluUr9CxMdb-vhnpp61IYwaJipBh4m0O66n0SSDlKl4hQT57uhdllhmL6rJacmFB";
+            mainObj.put("to", tokensegundo);
             JSONObject notificationObj=new JSONObject();
             notificationObj.put("title", "any title");
             notificationObj.put("body", "any body");
@@ -328,12 +343,13 @@ public class MainActivity extends AppCompatActivity {
             JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url, mainObj, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
+                    System.out.println(response);
+                    System.out.println("Notificación enviada");
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                        System.out.println("Notificación erronea");
                 }
             }){
                 @Override

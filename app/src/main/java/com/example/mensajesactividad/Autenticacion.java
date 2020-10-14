@@ -67,6 +67,7 @@ public class Autenticacion extends AppCompatActivity  {
 
     EditText ponernombre;
     RequestQueue requestQueue;
+    static String token;
 
     private final int REQUEST_READ_PHONE_STATE=1;
     private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 1;
@@ -109,8 +110,8 @@ public class Autenticacion extends AppCompatActivity  {
                                     }
 
                                     // Get new Instance ID token
-                                    String token = task.getResult().getToken();
-
+                                    token = task.getResult().getToken();
+                                    System.out.println(token);
                                     // Log and toast
                                  //   String msg = getString(R.string.msg_token_fmt, token);
                                   //  Log.d("TOKEN", msg);
