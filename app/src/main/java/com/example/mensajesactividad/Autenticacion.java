@@ -67,7 +67,7 @@ public class Autenticacion extends AppCompatActivity  {
 
     EditText ponernombre;
     RequestQueue requestQueue;
-    static String token;
+
 
     private final int REQUEST_READ_PHONE_STATE=1;
     private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 1;
@@ -85,8 +85,6 @@ public class Autenticacion extends AppCompatActivity  {
         textoponertelefono= findViewById(R.id.confirmar);
         ponernombre=findViewById(R.id.nombre);
         botonempezar=findViewById(R.id.botonempiece);
-
-
 
         requestQueue= Volley.newRequestQueue(getApplicationContext());
 
@@ -110,12 +108,15 @@ public class Autenticacion extends AppCompatActivity  {
                                     }
 
                                     // Get new Instance ID token
-                                    token = task.getResult().getToken();
+                                    String token = task.getResult().getToken();
                                     System.out.println(token);
+
+                                    guardarUsuario(numerotelefono.replaceAll("[\\D]", ""), ponernombre.getText().toString(), token.toString());
+
                                     // Log and toast
                                  //   String msg = getString(R.string.msg_token_fmt, token);
                                   //  Log.d("TOKEN", msg);
-                                    Toast.makeText(Autenticacion.this, token, Toast.LENGTH_SHORT).show();
+                                 //   Toast.makeText(Autenticacion.this, token, Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -127,8 +128,8 @@ public class Autenticacion extends AppCompatActivity  {
 
 
                 //    smsToken();
-                    guardarUsuario(numerotelefono.replaceAll("[\\D]", ""), ponernombre.getText().toString());
-                    getContactPermission();
+                //    guardarUsuario(numerotelefono.replaceAll("[\\D]", ""), ponernombre.getText().toString());
+                //    getContactPermission();
                 }else {
                     String salida="Número o nombre no válido";
                     mostrarError(salida);
@@ -139,17 +140,24 @@ public class Autenticacion extends AppCompatActivity  {
 
     }
 
-    private void guardarUsuario(String telefono, String nombre) {
+    private void guardarUsuario(String telefono, String nombre, String token) {
         StringRequest request=new StringRequest(Request.Method.POST, urlcrearusuario, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+               if (response.length()==0) {
+                   getContactPermission();
+               }else {
+                   Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+               }
 
             }
         }, new Response.ErrorListener(){
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println(error);
+
+                System.out.println("volley error"+error);
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
 
             }
         }) {
@@ -158,6 +166,7 @@ public class Autenticacion extends AppCompatActivity  {
                 Map<String, String> parameters=new HashMap<>();
                 parameters.put("telefono", telefono);
                 parameters.put("nombre", nombre);
+                parameters.put("token", token);
                 return parameters;
             }
         };

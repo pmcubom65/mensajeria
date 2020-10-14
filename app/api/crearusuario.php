@@ -11,8 +11,9 @@ function nuevousuario(){
 
 	$nombre = $_POST["nombre"];
 	$telefono=$_POST["telefono"];
+	$token=$_POST["token"];
 
-	$query=" Insert into usuarios(nombre, telefono) values ('$nombre', '$telefono');";
+	$query=" Insert into usuarios(nombre, telefono, token) values ('$nombre', '$telefono', '$token');";
 
 	mysqli_query($connect, $query) or die (mysqli_error($connect));
 	mysqli_close($connect);
