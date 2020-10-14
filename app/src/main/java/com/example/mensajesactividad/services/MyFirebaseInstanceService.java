@@ -23,7 +23,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONObject;
 
 import java.util.Map;
-
+//https://stackoverflow.com/questions/37358462/firebase-onmessagereceived-not-called-when-app-in-background
 public class MyFirebaseInstanceService extends FirebaseMessagingService {
 
 
@@ -54,7 +54,7 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
 
         Map<String, String> data = remoteMessage.getData();
 
-
+        System.out.println(data);
 
         notificationChannel();
        crearNotificacion();

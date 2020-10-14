@@ -341,6 +341,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             mainObj.put("notification", notificationObj);
+            mainObj.put("data", jData);
             JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url, mainObj, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
