@@ -20,12 +20,17 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"/>
+
         <activity android:name=".MostrarContactos" />
 
         <receiver
             android:name=".MyBroadcastReceiver"
             android:exported="true">
             <intent-filter>
+
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
@@ -34,14 +39,29 @@
 
         <service
             android:name=".services.MyFirebaseInstanceService"
-            android:exported="false"
-            android:directBootAware="true">
+            android:directBootAware="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service
+            android:name=".services.NotificationListener"
+            android:enabled="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity">
+
+            <intent-filter>
+                <action android:name="CLICK_ACTION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
         <activity android:name=".Autenticacion">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -71,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
     // [START declare_analytics]
     private FirebaseAnalytics mFirebaseAnalytics;
 
+
+    Mensaje mensaje;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String dia=ahora.format(dtf);
 
-                Mensaje mensaje=new Mensaje(textoenviar.getText().toString(), dia, Autenticacion.numerotelefono);
+                mensaje=new Mensaje(textoenviar.getText().toString(), dia, Autenticacion.numerotelefono);
                 String id_mensaje=String.valueOf(zdt.toInstant().toEpochMilli());
                 grabarMensaje(mensaje, id_mensaje);
                 cargarMensajesChat();
@@ -138,15 +141,6 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     public void crearNotificacion() {
-
-    /*    Intent siintent=new Intent(this, MainActivity.class);
-        Intent nointent=new Intent(this, MainActivity.class);
-
-       PendingIntent sipendingintent=PendingIntent.getActivity(this,0,siintent,PendingIntent.FLAG_ONE_SHOT);
-
-
-
-        PendingIntent nopendingintent=PendingIntent.getActivity(this,0,nointent,PendingIntent.FLAG_ONE_SHOT);*/
 
         NotificationCompat.Builder notification=new NotificationCompat.Builder(this, canal);
         notification.setSmallIcon(R.drawable.smartlabs);
@@ -208,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(this);
+
         notificationManagerCompat.notify(notificationid, notification.build());
     }
 
@@ -269,9 +264,7 @@ public class MainActivity extends AppCompatActivity {
         StringRequest request=new StringRequest(Request.Method.POST, urlcargarmensajeschat, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-             //   System.out.println("respuesta recibida");
-                 //   System.out.println(response.toString());
-              //  Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+
                 try {
                     JSONObject jsnobject = new JSONObject(response.toString());
                     JSONArray jsonArray = jsnobject.getJSONArray("mensajes_del_chat");
@@ -320,6 +313,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void notificationFirebase()   {
+
+        //https://stackoverflow.com/questions/37731275/display-specific-activity-when-firebase-notification-is-tapped/38195369
+
+
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, michatid);
    //     bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
@@ -337,8 +334,17 @@ public class MainActivity extends AppCompatActivity {
             String tokensegundo="dbMjzbyeRvK7H7X0JPFRml:APA91bGnxgY1r1waKY2Knmbc5kiSjtK12Z_IJkDmjKsJ7YuDvSN5w6phiWoIhGbTeEMOx89_78FUbluUr9CxMdb-vhnpp61IYwaJipBh4m0O66n0SSDlKl4hQT57uhdllhmL6rJacmFB";
             mainObj.put("to", tokensegundo);
             JSONObject notificationObj=new JSONObject();
-            notificationObj.put("title", "any title");
-            notificationObj.put("body", "any body");
+            JSONObject jData = new JSONObject();
+
+            notificationObj.put("title", mensaje.getContenido());
+            notificationObj.put("data", michatid);
+            notificationObj.put("body", mensaje.getContenido());
+            notificationObj.put("sound", "default");
+            notificationObj.put("click_action", "CLICK_ACTION");
+
+
+
+
             mainObj.put("notification", notificationObj);
             JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url, mainObj, new Response.Listener<JSONObject>() {
                 @Override
