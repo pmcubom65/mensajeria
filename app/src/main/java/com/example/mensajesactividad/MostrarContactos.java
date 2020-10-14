@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 
 import com.android.volley.AuthFailureError;
@@ -47,9 +48,14 @@ public class MostrarContactos extends AppCompatActivity {
     RequestQueue requestQueue;
     String insertchat="http://10.0.2.2/api/crearchat.php";
     String showchat="http://10.0.2.2/api/chats_service.php";
+    String buscarusuario="http://10.0.2.2/api/buscarusuario.php";
 
     public static String chat_id_empiece;
     public static String telefono_chat;
+    String id;
+    String inicio;
+
+    private Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,16 +81,18 @@ public class MostrarContactos extends AppCompatActivity {
 
                         LocalDateTime fechaactual= LocalDateTime.now();
                         ZonedDateTime zdt = fechaactual.atZone(ZoneId.of("Europe/Andorra"));
-                        String id= String.valueOf(zdt.toInstant().toEpochMilli());
+                        id= String.valueOf(zdt.toInstant().toEpochMilli());
 
                         DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                        String inicio=fechaactual.format(dtf);
+                        inicio=fechaactual.format(dtf);
 
-                        guardarUsuario(contactos.get(position).getTelefono().toString().replaceAll("[\\D]", ""), contactos.get(position).getNombre().toString());
+                 //       guardarUsuario(contactos.get(position).getTelefono().toString().replaceAll("[\\D]", ""), contactos.get(position).getNombre().toString());
 
                         telefono_chat=contactos.get(position).getTelefono().toString().replaceAll("[\\D]", "");
 
-                        crearChat(id, inicio);
+                        buscarUsuario(telefono_chat);
+
+
 
                     }
 
@@ -133,13 +141,14 @@ public class MostrarContactos extends AppCompatActivity {
         requestQueue.add(request);
         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("chat_id", id);
+        intent.putExtra("tokenaenviar", usuario.getToken().toString());
         startActivity(intent);
     }
 
 
 
 
-    private void guardarUsuario(String telefono, String nombre) {
+    private void guardarUsuario(String telefono) {
         StringRequest request=new StringRequest(Request.Method.POST, urlcrearusuario, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -157,11 +166,68 @@ public class MostrarContactos extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parameters=new HashMap<>();
                 parameters.put("telefono", telefono);
-                parameters.put("nombre", nombre);
+                parameters.put("nombre", "guardar");
                 return parameters;
             }
         };
 
+
+        requestQueue.add(request);
+    }
+
+
+
+
+
+    private void buscarUsuario(String telefonobuscar) {
+
+        System.out.println("buscando al usuario....");
+
+        StringRequest request=new StringRequest(Request.Method.POST, buscarusuario, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject jsnobject = new JSONObject(response.toString());
+                    JSONArray jsonArray = jsnobject.getJSONArray("usuario");
+                    if (jsonArray.length()==0) {
+                        Toast.makeText(getBaseContext(), "El usuario no se encuentra registrado", Toast.LENGTH_LONG).show();
+                    } else {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject explrObject = jsonArray.getJSONObject(i);
+                            usuario=new Usuario(explrObject.getString("telefono"), explrObject.getString("nombre"), null, explrObject.getString("token"));
+                            crearChat(id, inicio);
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters=new HashMap<>();
+
+                parameters.put("telefono", telefonobuscar);
+
+                return parameters;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> param = new HashMap<String, String>();
+                param.put("Content-Type","application/x-www-form-urlencoded");
+                return param;
+            }
+        };
 
         requestQueue.add(request);
     }

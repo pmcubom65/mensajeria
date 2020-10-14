@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     // [START declare_analytics]
     private FirebaseAnalytics mFirebaseAnalytics;
 
+    String tokenaenviarlosmensajes;
 
     Mensaje mensaje;
 
@@ -82,8 +83,11 @@ public class MainActivity extends AppCompatActivity {
         Intent llegada=getIntent();
         michatid=(String) llegada.getExtras().get("chat_id");
 
+        tokenaenviarlosmensajes= (String) llegada.getExtras().get("tokenaenviar");
 
         System.out.println("chatid creado "+michatid);
+
+        System.out.println("token a enviar los mensajes "+tokenaenviarlosmensajes);
 
         requestQueue= Volley.newRequestQueue(getApplicationContext());
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -195,12 +199,6 @@ public class MainActivity extends AppCompatActivity {
 
         notification.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Rechazar", dismissIntent);
 
-        //notification.setContentIntent(pendingIntent);
-
- //       notification.addAction(R.drawable.round_rect_shape, "Sí", sipendingintent);
-  //      notification.addAction(R.drawable.round_rect_shape, "No", nopendingintent);
-
-
         NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(this);
 
         notificationManagerCompat.notify(notificationid, notification.build());
@@ -218,8 +216,6 @@ public class MainActivity extends AppCompatActivity {
             notificationChannel.setDescription(indicar);
             NotificationManager notificationManager=(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(notificationChannel);
-
-
 
         }
     }
@@ -332,17 +328,16 @@ public class MainActivity extends AppCompatActivity {
 
 
             String tokensegundo="dbMjzbyeRvK7H7X0JPFRml:APA91bGnxgY1r1waKY2Knmbc5kiSjtK12Z_IJkDmjKsJ7YuDvSN5w6phiWoIhGbTeEMOx89_78FUbluUr9CxMdb-vhnpp61IYwaJipBh4m0O66n0SSDlKl4hQT57uhdllhmL6rJacmFB";
-            mainObj.put("to", tokensegundo);
+            mainObj.put("to", tokenaenviarlosmensajes);
             JSONObject notificationObj=new JSONObject();
             JSONObject jData = new JSONObject();
+            jData.put("michatid", michatid);
 
             notificationObj.put("title", mensaje.getContenido());
-            notificationObj.put("data", michatid);
+            notificationObj.put("data", jData);
             notificationObj.put("body", mensaje.getContenido());
             notificationObj.put("sound", "default");
             notificationObj.put("click_action", "CLICK_ACTION");
-
-
 
 
             mainObj.put("notification", notificationObj);

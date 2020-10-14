@@ -53,7 +53,7 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
        System.out.println( "From: " + remoteMessage.toString());
 
         Map<String, String> data = remoteMessage.getData();
-        System.out.println("datos de la noti "+data);
+
 
 
         notificationChannel();

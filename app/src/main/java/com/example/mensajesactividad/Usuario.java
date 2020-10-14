@@ -13,6 +13,7 @@ public class Usuario implements Serializable {
     private String telefono;
     private String nombre;
     private String uri;
+    private String token;
 
 
     public Usuario(String telefono, String nombre, String uri) {
@@ -21,6 +22,20 @@ public class Usuario implements Serializable {
         this.uri=uri;
     }
 
+    public Usuario(String telefono, String nombre, String uri, String token) {
+        this.telefono = telefono;
+        this.nombre = nombre;
+        this.uri=uri;
+        this.token=token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getTelefono() {
         return telefono;
