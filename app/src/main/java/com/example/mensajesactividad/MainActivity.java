@@ -37,6 +37,7 @@ import com.example.mensajesactividad.services.MyListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,7 +141,9 @@ public class MainActivity extends AppCompatActivity  {
                 DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String dia=ahora.format(dtf);
 
-                mensaje=new Mensaje(textoenviar.getText().toString(), dia, usuarioemisor.getTelefono().toString());
+                System.out.println("voy a enviar un mensaje "+usuarioemisor);
+
+                mensaje=new Mensaje(textoenviar.getText().toString(), dia, usuarioemisor.getTelefono().toString(), usuarioemisor.getNombre().toString());
                 datosAmostrar.add(datosAmostrar.size(), mensaje);
                 mAdapter.notifyItemChanged(datosAmostrar.size());
                 String id_mensaje=String.valueOf(zdt.toInstant().toEpochMilli());
@@ -273,7 +276,6 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-
     public void  cargarMensajesChat() {
 
 
@@ -286,7 +288,7 @@ public class MainActivity extends AppCompatActivity  {
                     JSONArray jsonArray = jsnobject.getJSONArray("mensajes_del_chat");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject explrObject = jsonArray.getJSONObject(i);
-                        Mensaje m=new Mensaje(explrObject.getString("contenido"), explrObject.getString("dia"), explrObject.getString("telefono"));
+                        Mensaje m=new Mensaje(explrObject.getString("contenido"), explrObject.getString("dia"), explrObject.getString("telefono"), explrObject.getString("nombre"));
                         System.out.println(m);
 
                         if (!datosAmostrar.contains(m)) {
@@ -409,6 +411,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
     }
+
 
 
 }

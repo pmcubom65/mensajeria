@@ -22,6 +22,7 @@ import com.example.mensajesactividad.Usuario;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -177,16 +178,4 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
     }
 
 
-
-
-
-
-
-
-    @Override
-    public void onCreate() {
-        System.out.println("notificación está aquí");
-
-
-    }
 }

@@ -11,12 +11,29 @@ public class Mensaje {
     private String contenido;
     private String fecha;
     private String telefono;
+    private String nombre;
 
 
     public Mensaje(String contenido, String fecha, String telefono) {
         this.contenido = contenido;
         this.fecha = fecha;
         this.telefono=telefono;
+    }
+
+
+    public Mensaje(String contenido, String fecha, String telefono, String nombre) {
+        this.contenido = contenido;
+        this.fecha = fecha;
+        this.telefono=telefono;
+        this.nombre=nombre;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getTelefono() {

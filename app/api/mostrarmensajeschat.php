@@ -13,7 +13,7 @@
 
  
 
- 	$query=" Select * FROM mensajes WHERE chat_id='$chat_id'; ";
+ 	$query=" Select m.contenido, m.dia, m.telefono, u.nombre FROM mensajes m, usuarios u WHERE m.telefono=u.telefono and chat_id='$chat_id'; ";
 
  	$result = mysqli_query($connect, $query);
  	$number_of_rows=mysqli_num_rows($result);

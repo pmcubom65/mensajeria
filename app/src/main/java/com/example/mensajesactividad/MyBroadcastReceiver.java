@@ -66,7 +66,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String dia=ahora.format(dtf);
 
-        Mensaje mensaje=new Mensaje(contenido.toString(), dia, usuarioemisor.getTelefono().toString());
+        Mensaje mensaje=new Mensaje(contenido.toString(), dia, usuarioemisor.getTelefono().toString(), usuarioemisor.getNombre().toString());
         id_mensaje=String.valueOf(zdt.toInstant().toEpochMilli());
         grabarMensaje(mensaje, id_mensaje, context);
 

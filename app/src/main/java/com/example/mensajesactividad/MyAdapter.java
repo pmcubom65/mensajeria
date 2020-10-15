@@ -77,7 +77,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         holder.mitextview.setText(datos.get(position).getContenido().toString());
         holder.fechayhora.setText(datos.get(position).getFecha().toString());
-        holder.telefonodelmensaje.setText(datos.get(position).getTelefono().toString());
+        holder.telefonodelmensaje.setText(datos.get(position).getNombre().toString());
 
     }
 
