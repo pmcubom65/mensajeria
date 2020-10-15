@@ -43,9 +43,13 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         requestQueue= Volley.newRequestQueue(context.getApplicationContext());
 
 
+
         CharSequence contenido = getMessageText(intent);
         chat_id=intent.getStringExtra("chat_id");
-        String telefono=intent.getStringExtra("telefono");
+       // String telefono=intent.getStringExtra("telefono");
+
+       Usuario usuarioemisor=(Usuario) intent.getSerializableExtra("usuarioemisor");
+       Usuario usuarioreceptor=(Usuario) intent.getSerializableExtra("usuarioreceptor");
 
         LocalDateTime ahora= LocalDateTime.now();
         ZonedDateTime zdt = ahora.atZone(ZoneId.of("Europe/Madrid"));
@@ -53,7 +57,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String dia=ahora.format(dtf);
 
-        Mensaje mensaje=new Mensaje(contenido.toString(), dia, telefono);
+        Mensaje mensaje=new Mensaje(contenido.toString(), dia, usuarioemisor.getTelefono().toString());
         id_mensaje=String.valueOf(zdt.toInstant().toEpochMilli());
         grabarMensaje(mensaje, id_mensaje);
 

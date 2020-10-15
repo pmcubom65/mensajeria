@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi;
 import java.io.Serializable;
 import java.util.Objects;
 
+
+@SuppressWarnings("serial")
 public class Usuario implements Serializable {
 
     private String telefono;

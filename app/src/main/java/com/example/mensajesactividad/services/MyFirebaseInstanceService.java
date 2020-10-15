@@ -17,6 +17,7 @@ import com.example.mensajesactividad.Autenticacion;
 import com.example.mensajesactividad.MainActivity;
 import com.example.mensajesactividad.MyBroadcastReceiver;
 import com.example.mensajesactividad.R;
+import com.example.mensajesactividad.Usuario;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -31,7 +32,11 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
     private final int notificationid=001;
     String KEY_REPLY = "key_reply";
 
+    String chat_id;
+    String titulo;
 
+    Usuario emisor;
+    Usuario receptor;
 
 
     @Override
@@ -53,11 +58,27 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
        System.out.println( "From: " + remoteMessage.toString());
 
         Map<String, String> data = remoteMessage.getData();
+        chat_id=(String) data.get("michatid");
+        titulo=(String) data.get("titulo");
+
+
+        String tokenemisor=(String) data.get("tokenaenviar");
+        String nombreemisor=(String) data.get("nombrereceptor");
+        String telefonoemisor=(String) data.get("telefonoreceptor");
+
+        emisor=new Usuario(telefonoemisor, nombreemisor, null, tokenemisor);
+
+        String tokenreceptor=(String) data.get("tokenemisor");
+        String nombrereceptor=(String) data.get("nombreemisor");
+        String telefonoreceptor=(String) data.get("telefonoemisor");
+
+        receptor=new Usuario(telefonoreceptor, nombrereceptor, null, tokenreceptor);
+
 
         System.out.println(data);
 
         notificationChannel();
-       crearNotificacion();
+        crearNotificacion();
     }
 
 
@@ -72,10 +93,10 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
 
         NotificationCompat.Builder notification=new NotificationCompat.Builder(getApplicationContext(), canal);
         notification.setSmallIcon(R.drawable.smartlabs);
-        notification.setContentTitle("segunda noti");
+        notification.setContentTitle(receptor.getNombre().toString());
         notification.setStyle(new NotificationCompat.BigTextStyle()
-                .bigText("nuevo texto"));
-        notification.setContentText("segunda noti");
+                .bigText(titulo));
+        notification.setContentText(titulo);
         notification.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         notification.setAutoCancel(true);
 
@@ -85,11 +106,11 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
                 .setLabel(replyLabel)
                 .build();
 
-        // Build a PendingIntent for the reply action to trigger.
 
         Intent resultIntent = new Intent(this, MyBroadcastReceiver.class);
-        resultIntent.putExtra("chat_id", 1);
-        resultIntent.putExtra("telefono", "66666666");
+        resultIntent.putExtra("chat_id", chat_id);
+        resultIntent.putExtra("usuarioemisor", emisor);
+        resultIntent.putExtra("usuarioreceptor", receptor);
 
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -117,16 +138,13 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("notificationId", notificationid);
-        intent.putExtra("chat_id", "44455444");
+        intent.putExtra("chat_id", chat_id);
+        intent.putExtra("usuarioemisor", emisor);
+        intent.putExtra("usuarioreceptor", receptor);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent dismissIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        notification.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Rechazar", dismissIntent);
-
-        //notification.setContentIntent(pendingIntent);
-
-        //       notification.addAction(R.drawable.round_rect_shape, "Sí", sipendingintent);
-        //      notification.addAction(R.drawable.round_rect_shape, "No", nopendingintent);
+        notification.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Ver mensaje", dismissIntent);
 
 
         NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(this);
@@ -140,8 +158,8 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
     public void notificationChannel() {
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O) {
             String indicar= "mas cosas";
-            CharSequence personal=indicar;
-            String descripcion=indicar;
+            CharSequence personal=titulo;
+            String descripcion=titulo;
             int importancia= NotificationManager.IMPORTANCE_DEFAULT;
 
             NotificationChannel notificationChannel=new NotificationChannel(canal, personal, importancia);

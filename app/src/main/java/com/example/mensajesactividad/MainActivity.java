@@ -70,10 +70,16 @@ public class MainActivity extends AppCompatActivity {
     String michatid;
     // [START declare_analytics]
     private FirebaseAnalytics mFirebaseAnalytics;
-
-    String tokenaenviarlosmensajes;
-
     Mensaje mensaje;
+
+ /*   String tokenaenviarlosmensajes;
+    String tokenemisor;
+    String nombreemisor;
+    String nombrereceptor;
+
+    String telefonoreceptor;*/
+    Usuario usuarioemisor;
+    Usuario usuarioreceptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +89,18 @@ public class MainActivity extends AppCompatActivity {
         Intent llegada=getIntent();
         michatid=(String) llegada.getExtras().get("chat_id");
 
-        tokenaenviarlosmensajes= (String) llegada.getExtras().get("tokenaenviar");
+   /*     tokenaenviarlosmensajes= (String) llegada.getExtras().get("tokenaenviar");
+        tokenemisor=(String) llegada.getExtras().get("tokenorigen");
+        nombreemisor=(String) llegada.getExtras().get("nombreemisor");
+        nombrereceptor=(String) llegada.getExtras().get("nombrereceptor");
+        telefonoreceptor=(String) llegada.getExtras().get("numerodetelefonoreceptor");*/
 
-        System.out.println("chatid creado "+michatid);
+        usuarioemisor=(Usuario) llegada.getSerializableExtra("usuarioemisor");
+        usuarioreceptor=(Usuario) llegada.getSerializableExtra("usuarioreceptor");
 
-        System.out.println("token a enviar los mensajes "+tokenaenviarlosmensajes);
+
+
+
 
         requestQueue= Volley.newRequestQueue(getApplicationContext());
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -102,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         datosAmostrar = new ArrayList<>();
 
         cargarMensajesChat();
-
 
         mAdapter = new MyAdapter(this, datosAmostrar);
         recyclerView.setAdapter(mAdapter);
@@ -122,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String dia=ahora.format(dtf);
 
-                mensaje=new Mensaje(textoenviar.getText().toString(), dia, Autenticacion.numerotelefono);
+                mensaje=new Mensaje(textoenviar.getText().toString(), dia, usuarioemisor.getTelefono().toString());
                 String id_mensaje=String.valueOf(zdt.toInstant().toEpochMilli());
                 grabarMensaje(mensaje, id_mensaje);
                 cargarMensajesChat();
@@ -165,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent resultIntent = new Intent(this, MyBroadcastReceiver.class);
         resultIntent.putExtra("chat_id", michatid);
-        resultIntent.putExtra("telefono", Autenticacion.numerotelefono);
+        resultIntent.putExtra("telefono", usuarioreceptor.getTelefono().toString());
 
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -328,19 +340,34 @@ public class MainActivity extends AppCompatActivity {
 
 
       //      String tokensegundo="dbMjzbyeRvK7H7X0JPFRml:APA91bGnxgY1r1waKY2Knmbc5kiSjtK12Z_IJkDmjKsJ7YuDvSN5w6phiWoIhGbTeEMOx89_78FUbluUr9CxMdb-vhnpp61IYwaJipBh4m0O66n0SSDlKl4hQT57uhdllhmL6rJacmFB";
-            mainObj.put("to", tokenaenviarlosmensajes);
+     //       mainObj.put("to", tokenaenviarlosmensajes);
+
+            mainObj.put("to", usuarioreceptor.getToken().toString());
             JSONObject notificationObj=new JSONObject();
             JSONObject jData = new JSONObject();
             jData.put("michatid", michatid);
+            jData.put("titulo", mensaje.getContenido());
 
-            notificationObj.put("title", mensaje.getContenido());
+            jData.put("tokenaenviar", usuarioreceptor.getToken().toString());
+            jData.put("tokenemisor", usuarioemisor.getToken().toString());
+
+
+            jData.put("nombreemisor", usuarioemisor.getNombre().toString());
+            jData.put("nombrereceptor", usuarioreceptor.getNombre().toString());
+
+
+            jData.put("telefonoemisor", usuarioemisor.getTelefono().toString());
+            jData.put("telefonoreceptor", usuarioreceptor.getTelefono().toString());
+
+     /*       notificationObj.put("title", mensaje.getContenido());
 
             notificationObj.put("body", mensaje.getContenido());
             notificationObj.put("sound", "default");
-            notificationObj.put("click_action", "CLICK_ACTION");
+            notificationObj.put("click_action", "CLICK_ACTION");*/
 
 
-            mainObj.put("notification", notificationObj);
+     //       mainObj.put("notification", notificationObj);
+            mainObj.put("priority","high");
 
             mainObj.put("data", jData);
             JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url, mainObj, new Response.Listener<JSONObject>() {

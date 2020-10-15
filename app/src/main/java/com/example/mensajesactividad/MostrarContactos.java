@@ -141,7 +141,19 @@ public class MostrarContactos extends AppCompatActivity {
         requestQueue.add(request);
         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("chat_id", id);
-        intent.putExtra("tokenaenviar", usuario.getToken().toString());
+       /* intent.putExtra("tokenaenviar", usuario.getToken().toString());
+        intent.putExtra("tokenorigen", Autenticacion.tokenorigen);
+        intent.putExtra("nombreemisor", Autenticacion.nombredelemisor);
+
+        intent.putExtra("nombrereceptor", usuario.getNombre().toString());
+
+        intent.putExtra("numerodetelefono", Autenticacion.numerotelefono);
+        intent.putExtra("numerodetelefonoreceptor", usuario.getTelefono().toString());*/
+
+       intent.putExtra("usuarioemisor", new Usuario(Autenticacion.numerotelefono, Autenticacion.nombredelemisor, null, Autenticacion.tokenorigen));
+       intent.putExtra("usuarioreceptor", usuario);
+
+
         startActivity(intent);
     }
 

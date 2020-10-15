@@ -63,8 +63,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         LinearLayout.LayoutParams misparametros=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         misparametros.setMarginStart(440);
+        String telefono=datos.get(0).getTelefono().toString();
 
-        if (position%2!=0) {
+        if (!datos.get(position).getTelefono().toString().equals(telefono)) {
             holder.mitextview.setLayoutParams(misparametros);
             holder.fechayhora.setLayoutParams(misparametros);
             holder.telefonodelmensaje.setLayoutParams(misparametros);

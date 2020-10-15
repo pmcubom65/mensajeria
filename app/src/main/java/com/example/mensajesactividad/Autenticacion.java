@@ -75,6 +75,10 @@ public class Autenticacion extends AppCompatActivity  {
     private static final int SEND_SMS_PERMISSIONS_REQUEST=1;
     static String numerotelefono;
     String urlcrearusuario="http://10.0.2.2/api/crearusuario.php";
+    static String nombredelemisor;
+    static String tokenorigen;
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -97,6 +101,7 @@ public class Autenticacion extends AppCompatActivity  {
             public void onClick(View v) {
                 if (textoponertelefono.getText().toString().length()>0 && ponernombre.getText().toString().length()>0) {
                     numerotelefono=textoponertelefono.getText().toString();
+                    nombredelemisor=ponernombre.getText().toString();
 
                     FirebaseInstanceId.getInstance().getInstanceId()
                             .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -108,10 +113,10 @@ public class Autenticacion extends AppCompatActivity  {
                                     }
 
                                     // Get new Instance ID token
-                                    String token = task.getResult().getToken();
-                                    System.out.println(token);
+                                    tokenorigen = task.getResult().getToken();
+                                    System.out.println(tokenorigen);
 
-                                    guardarUsuario(numerotelefono.replaceAll("[\\D]", ""), ponernombre.getText().toString(), token.toString());
+                                    guardarUsuario(numerotelefono.replaceAll("[\\D]", ""), ponernombre.getText().toString(), tokenorigen.toString());
 
                                     // Log and toast
                                  //   String msg = getString(R.string.msg_token_fmt, token);
