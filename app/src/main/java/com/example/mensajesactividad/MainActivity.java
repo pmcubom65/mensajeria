@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         Intent llegada=getIntent();
         michatid=(String) llegada.getExtras().get("chat_id");
 
@@ -124,24 +126,28 @@ public class MainActivity extends AppCompatActivity {
         botonenviar=(FloatingActionButton) findViewById(R.id.botonmandarmensaje);
         textoenviar=(TextView) findViewById(R.id.textoanadir);
 
+        
+
         botonenviar.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 LocalDateTime ahora= LocalDateTime.now();
-                ZonedDateTime zdt = ahora.atZone(ZoneId.of("Europe/Andorra"));
+                ZonedDateTime zdt = ahora.atZone(ZoneId.of("Europe/Madrid"));
 
                 DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String dia=ahora.format(dtf);
 
                 mensaje=new Mensaje(textoenviar.getText().toString(), dia, usuarioemisor.getTelefono().toString());
+                datosAmostrar.add(datosAmostrar.size(), mensaje);
+                mAdapter.notifyItemChanged(datosAmostrar.size());
                 String id_mensaje=String.valueOf(zdt.toInstant().toEpochMilli());
                 grabarMensaje(mensaje, id_mensaje);
                 cargarMensajesChat();
 
                 notificationFirebase();
-                notificationChannel();
-                crearNotificacion();
+           //     notificationChannel();
+          //      crearNotificacion();
             }
         });
 
@@ -285,9 +291,9 @@ public class MainActivity extends AppCompatActivity {
                             datosAmostrar.add(m);
                         }
 
-                        mAdapter.notifyItemChanged(i, m);
-                    }
 
+                    }
+                    mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
