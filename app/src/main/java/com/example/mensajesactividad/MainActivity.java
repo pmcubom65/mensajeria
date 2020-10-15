@@ -327,20 +327,21 @@ public class MainActivity extends AppCompatActivity {
         try {
 
 
-            String tokensegundo="dbMjzbyeRvK7H7X0JPFRml:APA91bGnxgY1r1waKY2Knmbc5kiSjtK12Z_IJkDmjKsJ7YuDvSN5w6phiWoIhGbTeEMOx89_78FUbluUr9CxMdb-vhnpp61IYwaJipBh4m0O66n0SSDlKl4hQT57uhdllhmL6rJacmFB";
+      //      String tokensegundo="dbMjzbyeRvK7H7X0JPFRml:APA91bGnxgY1r1waKY2Knmbc5kiSjtK12Z_IJkDmjKsJ7YuDvSN5w6phiWoIhGbTeEMOx89_78FUbluUr9CxMdb-vhnpp61IYwaJipBh4m0O66n0SSDlKl4hQT57uhdllhmL6rJacmFB";
             mainObj.put("to", tokenaenviarlosmensajes);
             JSONObject notificationObj=new JSONObject();
             JSONObject jData = new JSONObject();
             jData.put("michatid", michatid);
 
             notificationObj.put("title", mensaje.getContenido());
-            notificationObj.put("data", jData);
+
             notificationObj.put("body", mensaje.getContenido());
             notificationObj.put("sound", "default");
             notificationObj.put("click_action", "CLICK_ACTION");
 
 
             mainObj.put("notification", notificationObj);
+
             mainObj.put("data", jData);
             JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url, mainObj, new Response.Listener<JSONObject>() {
                 @Override
