@@ -3,6 +3,7 @@ package com.example.mensajesactividad.services;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
 
     Usuario emisor;
     Usuario receptor;
+
 
 
     @Override
@@ -112,6 +114,7 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
         resultIntent.putExtra("usuarioemisor", emisor);
         resultIntent.putExtra("usuarioreceptor", receptor);
 
+
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -170,5 +173,20 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
 
 
         }
+
+    }
+
+
+
+
+
+
+
+
+    @Override
+    public void onCreate() {
+        System.out.println("notificación está aquí");
+
+
     }
 }

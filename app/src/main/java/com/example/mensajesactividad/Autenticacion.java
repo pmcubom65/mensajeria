@@ -71,6 +71,7 @@ public class Autenticacion extends AppCompatActivity  {
 
     private final int REQUEST_READ_PHONE_STATE=1;
     private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 1;
+    private static final int BIND_ACCESSIBILITY_SERVICE=1;
     private static final int READ_SMS_PERMISSIONS_REQUEST = 1;
     private static final int SEND_SMS_PERMISSIONS_REQUEST=1;
     static String numerotelefono;
@@ -99,6 +100,7 @@ public class Autenticacion extends AppCompatActivity  {
         botonempezar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (textoponertelefono.getText().toString().length()>0 && ponernombre.getText().toString().length()>0) {
                     numerotelefono=textoponertelefono.getText().toString();
                     nombredelemisor=ponernombre.getText().toString();

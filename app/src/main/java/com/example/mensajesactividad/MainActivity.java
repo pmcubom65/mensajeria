@@ -32,6 +32,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mensajesactividad.services.MyFirebaseInstanceService;
+import com.example.mensajesactividad.services.MyListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -47,7 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -126,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         botonenviar=(FloatingActionButton) findViewById(R.id.botonmandarmensaje);
         textoenviar=(TextView) findViewById(R.id.textoanadir);
 
-        
+
 
         botonenviar.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -326,6 +328,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
+
     public void notificationFirebase()   {
 
         //https://stackoverflow.com/questions/37731275/display-specific-activity-when-firebase-notification-is-tapped/38195369
@@ -404,6 +409,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
 }
 
