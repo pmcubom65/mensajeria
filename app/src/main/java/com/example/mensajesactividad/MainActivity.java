@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +14,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Layout;
@@ -50,6 +54,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+// https://stackoverflow.com/questions/22252065/refreshing-activity-on-receiving-gcm-push-notification
+
 public class MainActivity extends AppCompatActivity  {
 
     private RecyclerView recyclerView;
@@ -62,6 +68,7 @@ public class MainActivity extends AppCompatActivity  {
     private final String canal="5555";
     private final int notificationid=001;
     String KEY_REPLY = "key_reply";
+    public static int datos;
 
     String urlcrearmensaje="http://10.0.2.2/api/crearmensaje.php";
 
@@ -83,6 +90,15 @@ public class MainActivity extends AppCompatActivity  {
     String telefonoreceptor;*/
     Usuario usuarioemisor;
     Usuario usuarioreceptor;
+
+
+
+    private BroadcastReceiver onMessage= new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            System.out.println("cambio el recycler");
+            cargarMensajesChat();
+        }};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +134,6 @@ public class MainActivity extends AppCompatActivity  {
         recyclerView.setLayoutManager(layoutManager);
 
         datosAmostrar = new ArrayList<>();
-
         cargarMensajesChat();
 
         mAdapter = new MyAdapter(this, datosAmostrar);
@@ -128,6 +143,9 @@ public class MainActivity extends AppCompatActivity  {
 
         botonenviar=(FloatingActionButton) findViewById(R.id.botonmandarmensaje);
         textoenviar=(TextView) findViewById(R.id.textoanadir);
+
+
+
 
 
 
@@ -156,13 +174,10 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+
+        IntentFilter intentFilter= new IntentFilter("com.myApp.CUSTOM_EVENT");
+        LocalBroadcastManager.getInstance(this).registerReceiver(onMessage, intentFilter);
     }
-
-
-
-
-
-
 
 
 
@@ -332,7 +347,6 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-
     public void notificationFirebase()   {
 
         //https://stackoverflow.com/questions/37731275/display-specific-activity-when-firebase-notification-is-tapped/38195369
@@ -408,6 +422,8 @@ public class MainActivity extends AppCompatActivity  {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
 
 
     }

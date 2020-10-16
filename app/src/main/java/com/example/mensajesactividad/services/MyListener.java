@@ -6,6 +6,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public interface MyListener {
 
-    public void callback(RecyclerView.Adapter view);
+    void onUpdateUserActionReceived(int userId);
 
 }

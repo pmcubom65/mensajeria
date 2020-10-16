@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mensajesactividad.services.MyListener;
+
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {

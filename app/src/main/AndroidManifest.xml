@@ -26,6 +26,8 @@
 
         <activity android:name=".MostrarContactos" />
 
+
+
         <receiver
             android:name=".MyBroadcastReceiver"
             android:exported="true">
@@ -49,7 +51,9 @@
 
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:launchMode="singleTask">
+
 
             <intent-filter>
                 <action android:name="CLICK_ACTION" />

@@ -3,8 +3,10 @@ package com.example.mensajesactividad.services;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.util.Log;
 
@@ -13,6 +15,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.mensajesactividad.Autenticacion;
 import com.example.mensajesactividad.MainActivity;
@@ -33,6 +36,7 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
     private final String canal="5555";
     private final int notificationid=001;
     String KEY_REPLY = "key_reply";
+    public static boolean flag=false;
 
     String chat_id;
     String titulo;
@@ -154,9 +158,18 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
         NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(this);
 
         notificationManagerCompat.notify(notificationid, notification.build());
+
+
+        broadcastIntent();
+  }
+
+    public void broadcastIntent() {
+        Intent intent = new Intent();
+        intent.setAction("com.myApp.CUSTOM_EVENT");
+        // We should use LocalBroadcastManager when we want INTRA app
+        // communication
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
-
-
 
 
     public void notificationChannel() {
@@ -178,4 +191,10 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
     }
 
 
+    @Override
+    public void onCreate() {
+        System.out.println("notificacion recibida");
+
+
+    }
 }
