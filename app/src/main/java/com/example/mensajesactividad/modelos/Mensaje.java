@@ -1,4 +1,4 @@
-package com.example.mensajesactividad;
+package com.example.mensajesactividad.modelos;
 
 import android.os.Build;
 

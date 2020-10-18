@@ -30,6 +30,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mensajesactividad.modelos.Mensaje;
+import com.example.mensajesactividad.modelos.Usuario;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -62,9 +64,9 @@ public class MainActivity extends AppCompatActivity  {
     String KEY_REPLY = "key_reply";
     public static int datos;
 
-    String urlcrearmensaje="http://10.0.2.2/api/crearmensaje.php";
+    String urlcrearmensaje="http://192.168.1.37/api/crearmensaje.php";
 
-    String urlcargarmensajeschat="http://10.0.2.2/api/mostrarmensajeschat.php";
+    String urlcargarmensajeschat="http://192.168.1.37/api/mostrarmensajeschat.php";
 
     String url="https://fcm.googleapis.com/fcm/send";
 

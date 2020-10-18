@@ -10,7 +10,9 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 
@@ -29,28 +31,20 @@ import android.widget.Toast;
 
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import com.example.mensajesactividad.modelos.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -75,7 +69,7 @@ public class Autenticacion extends AppCompatActivity  {
     private static final int READ_SMS_PERMISSIONS_REQUEST = 1;
     private static final int SEND_SMS_PERMISSIONS_REQUEST=1;
     static String numerotelefono;
-    String urlcrearusuario="http://10.0.2.2/api/crearusuario.php";
+    String urlcrearusuario="http://192.168.1.37/api/crearusuario.php";
     static String nombredelemisor;
     static String tokenorigen;
 
@@ -87,9 +81,16 @@ public class Autenticacion extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_autenticacion);
 
+
+        cargarPreferencias();
+
+
+
         textoponertelefono= findViewById(R.id.confirmar);
         ponernombre=findViewById(R.id.nombre);
         botonempezar=findViewById(R.id.botonempiece);
+
+
 
         requestQueue= Volley.newRequestQueue(getApplicationContext());
 
@@ -105,29 +106,8 @@ public class Autenticacion extends AppCompatActivity  {
                     numerotelefono=textoponertelefono.getText().toString();
                     nombredelemisor=ponernombre.getText().toString();
 
-                    FirebaseInstanceId.getInstance().getInstanceId()
-                            .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                    if (!task.isSuccessful()) {
-                                        Log.w("TOKEN", "getInstanceId failed", task.getException());
-                                        return;
-                                    }
 
-                                    // Get new Instance ID token
-                                    tokenorigen = task.getResult().getToken();
-                                    System.out.println(tokenorigen);
-
-                                    guardarUsuario(numerotelefono.replaceAll("[\\D]", ""), ponernombre.getText().toString(), tokenorigen.toString());
-
-                                    // Log and toast
-                                 //   String msg = getString(R.string.msg_token_fmt, token);
-                                  //  Log.d("TOKEN", msg);
-                                 //   Toast.makeText(Autenticacion.this, token, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-
+                    getTokenTelefono();
 
 
 
@@ -147,14 +127,43 @@ public class Autenticacion extends AppCompatActivity  {
 
     }
 
+
+    private void getTokenTelefono() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("TOKEN", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        tokenorigen = task.getResult().getToken();
+                        System.out.println(tokenorigen);
+
+                        guardarUsuario(numerotelefono.replaceAll("[\\D]", ""), ponernombre.getText().toString(), tokenorigen.toString());
+
+                        // Log and toast
+                        //   String msg = getString(R.string.msg_token_fmt, token);
+                        //  Log.d("TOKEN", msg);
+                        //   Toast.makeText(Autenticacion.this, token, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void guardarUsuario(String telefono, String nombre, String token) {
         StringRequest request=new StringRequest(Request.Method.POST, urlcrearusuario, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                if (response.length()==0) {
+                   guardarPreferencias(telefono,nombre, token);
                    getContactPermission();
+
+
                }else {
-                   Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                  Snackbar.make(findViewById(R.id.autenticacionlayout), response, Snackbar.LENGTH_LONG).show();
+                
                }
 
             }
@@ -333,4 +342,29 @@ public class Autenticacion extends AppCompatActivity  {
     }
 
 
+    private void guardarPreferencias(String telefono, String nombre, String token){
+        SharedPreferences preferences=getSharedPreferences("com.example.mensajes.credenciales", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=preferences.edit();
+        editor.putString("telefono", telefono);
+        editor.putString("token", token);
+        editor.putString("nombre", nombre);
+        editor.commit();
+
+    }
+
+    private void cargarPreferencias(){
+        SharedPreferences preferences=getSharedPreferences("com.example.mensajes.credenciales", Context.MODE_PRIVATE);
+        String telefono=preferences.getString("telefono", "");
+        String token=preferences.getString("token", "");
+        String nombre=preferences.getString("nombre", "");
+
+        if (telefono.length()>0 && token.length()>0 && nombre.length()>0){
+            System.out.println("preferencias funcionan");
+            numerotelefono=telefono;
+            nombredelemisor=nombre;
+            tokenorigen=token;
+            getContactList();
+        }
+
+    }
 }

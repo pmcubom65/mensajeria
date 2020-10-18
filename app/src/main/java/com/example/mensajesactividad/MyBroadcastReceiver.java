@@ -18,7 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.example.mensajesactividad.modelos.Mensaje;
+import com.example.mensajesactividad.modelos.Usuario;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +37,7 @@ import java.util.Map;
 public class MyBroadcastReceiver extends BroadcastReceiver {
 
     String KEY_REPLY = "key_reply";
-    String urlcrearmensaje="http://10.0.2.2/api/crearmensaje.php";
+    String urlcrearmensaje="http://192.168.1.37/api/crearmensaje.php";
     String id_mensaje;
     RequestQueue requestQueue;
     String chat_id;

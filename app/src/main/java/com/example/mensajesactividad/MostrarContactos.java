@@ -1,7 +1,12 @@
 package com.example.mensajesactividad;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,6 +14,7 @@ import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,17 +23,17 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mensajesactividad.controladores.Presentacion;
+import com.example.mensajesactividad.modelos.Usuario;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -43,12 +49,13 @@ public class MostrarContactos extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerView.Adapter myAdapter;
     RecyclerView.LayoutManager layoutManager;
-    String urlcrearusuario="http://10.0.2.2/api/crearusuario.php";
+
+    String urlcrearusuario="http://192.168.1.37/api/crearusuario.php";
 
     RequestQueue requestQueue;
-    String insertchat="http://10.0.2.2/api/crearchat.php";
-    String showchat="http://10.0.2.2/api/chats_service.php";
-    String buscarusuario="http://10.0.2.2/api/buscarusuario.php";
+    String insertchat="http://192.168.1.37/api/crearchat.php";
+    String showchat="http://192.168.1.37/api/chats_service.php";
+    String buscarusuario="http://192.168.1.37/api/buscarusuario.php";
 
     public static String chat_id_empiece;
     public static String telefono_chat;
@@ -56,12 +63,56 @@ public class MostrarContactos extends AppCompatActivity {
     String inicio;
 
     private Usuario usuario;
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_contactos);
 
+        toolbar=findViewById(R.id.mitoolbar);
+        setSupportActionBar(toolbar);
+    //    getSupportActionBar().setLogo(R.drawable.smart_prod);
+        getSupportActionBar().setTitle(null);
+
+        drawerLayout=findViewById(R.id.midrawer);
+        navigationView=findViewById(R.id.minavegacion);
+
+        final ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.hamburguesa);
+
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.mihome:
+                        Intent homeintent=new Intent(MostrarContactos.this, Presentacion.class);
+                        drawerLayout.closeDrawers();
+                        startActivity(homeintent);
+                        return true;
+
+                    case R.id.miexit:
+                        System.exit(0);
+                        return true;
+
+                    case R.id.menuchat:
+                        System.out.println("chats");
+                        drawerLayout.closeDrawers();
+                        return true;
+
+                    case R.id.perfilicono:
+                        System.out.println("profile");
+                        drawerLayout.closeDrawers();
+                        return true;
+                }
+
+                return false;
+            }
+        });
 
         Intent intent = getIntent();
         Bundle args = intent.getBundleExtra("BUNDLE");
@@ -242,5 +293,18 @@ public class MostrarContactos extends AppCompatActivity {
         };
 
         requestQueue.add(request);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

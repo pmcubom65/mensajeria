@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.mensajesactividad.modelos.Usuario;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class AdaptadorContactos extends RecyclerView.Adapter<AdaptadorContactos.ViewHolder> {
@@ -63,7 +63,7 @@ public class AdaptadorContactos extends RecyclerView.Adapter<AdaptadorContactos.
         holder.contacto2.setText(datos.get(position).getTelefono().toString());
         String ruta=datos.get(position).getUri();
         Glide.with(context).load(Uri.parse(datos.get(position).getUri()))
-                .placeholder(R.drawable.common_google_signin_btn_icon_dark_normal)
+                .placeholder(R.drawable.account_circle)
                 .into(holder.imageView);
 
 

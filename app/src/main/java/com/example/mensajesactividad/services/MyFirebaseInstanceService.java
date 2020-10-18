@@ -3,10 +3,7 @@ package com.example.mensajesactividad.services;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.util.Log;
 
@@ -17,16 +14,13 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.mensajesactividad.Autenticacion;
 import com.example.mensajesactividad.MainActivity;
 import com.example.mensajesactividad.MyBroadcastReceiver;
 import com.example.mensajesactividad.R;
-import com.example.mensajesactividad.Usuario;
+import com.example.mensajesactividad.modelos.Usuario;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-
-import org.json.JSONObject;
 
 import java.util.Map;
 //https://stackoverflow.com/questions/37358462/firebase-onmessagereceived-not-called-when-app-in-background
