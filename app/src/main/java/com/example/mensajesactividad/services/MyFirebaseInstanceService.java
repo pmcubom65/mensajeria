@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -92,6 +93,11 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
     public void crearNotificacion() {
 
+        //https://stackoverflow.com/questions/41888161/how-to-create-a-custom-notification-layout-in-android
+
+   //     RemoteViews normal=new RemoteViews(getPackageName(), R.layout.cerrada);
+    //    RemoteViews expandida=new RemoteViews(getPackageName(), R.layout.expandida);
+
         NotificationCompat.Builder notification=new NotificationCompat.Builder(getApplicationContext(), canal);
         notification.setSmallIcon(R.drawable.smartlabs);
         notification.setContentTitle(receptor.getNombre().toString());
@@ -99,6 +105,11 @@ public class MyFirebaseInstanceService extends FirebaseMessagingService {
                 .bigText(titulo));
         notification.setContentText(titulo);
         notification.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        //notification.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
+        //notification.setCustomContentView(normal);
+        //notification.setCustomBigContentView(expandida);
+
+
         notification.setAutoCancel(true);
 
         String replyLabel = "Respuesta: ";
