@@ -64,9 +64,9 @@ public class MainActivity extends AppCompatActivity  {
     String KEY_REPLY = "key_reply";
     public static int datos;
 
-    String urlcrearmensaje="http://192.168.1.37/api/crearmensaje.php";
+    String urlcrearmensaje="http://10.0.2.2/api/crearmensaje.php";
 
-    String urlcargarmensajeschat="http://192.168.1.37/api/mostrarmensajeschat.php";
+    String urlcargarmensajeschat="http://10.0.2.2/api/mostrarmensajeschat.php";
 
     String url="https://fcm.googleapis.com/fcm/send";
 

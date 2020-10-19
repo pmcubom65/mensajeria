@@ -69,7 +69,7 @@ public class Autenticacion extends AppCompatActivity  {
     private static final int READ_SMS_PERMISSIONS_REQUEST = 1;
     private static final int SEND_SMS_PERMISSIONS_REQUEST=1;
     static String numerotelefono;
-    String urlcrearusuario="http://192.168.1.37/api/crearusuario.php";
+    String urlcrearusuario="http://10.0.2.2/api/crearusuario.php";
     static String nombredelemisor;
     static String tokenorigen;
 

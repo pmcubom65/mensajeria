@@ -50,12 +50,12 @@ public class MostrarContactos extends AppCompatActivity {
     RecyclerView.Adapter myAdapter;
     RecyclerView.LayoutManager layoutManager;
 
-    String urlcrearusuario="http://192.168.1.37/api/crearusuario.php";
+    String urlcrearusuario="http://10.0.2.2/api/crearusuario.php";
 
     RequestQueue requestQueue;
-    String insertchat="http://192.168.1.37/api/crearchat.php";
-    String showchat="http://192.168.1.37/api/chats_service.php";
-    String buscarusuario="http://192.168.1.37/api/buscarusuario.php";
+    String insertchat="http://10.0.2.2/api/crearchat.php";
+    String showchat="http://10.0.2.2/api/chats_service.php";
+    String buscarusuario="http://10.0.2.2/api/buscarusuario.php";
 
     public static String chat_id_empiece;
     public static String telefono_chat;
