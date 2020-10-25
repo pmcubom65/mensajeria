@@ -29,6 +29,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.mensajesactividad.controladores.Presentacion;
 import com.example.mensajesactividad.modelos.Usuario;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -107,6 +108,8 @@ public class MostrarContactos extends AppCompatActivity {
                     case R.id.perfilicono:
                         System.out.println("profile");
                         drawerLayout.closeDrawers();
+                        Intent i=new Intent(MostrarContactos.this, Perfil.class);
+                        startActivity(i);
                         return true;
                 }
 
@@ -136,8 +139,6 @@ public class MostrarContactos extends AppCompatActivity {
 
                         DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                         inicio=fechaactual.format(dtf);
-
-                 //       guardarUsuario(contactos.get(position).getTelefono().toString().replaceAll("[\\D]", ""), contactos.get(position).getNombre().toString());
 
                         telefono_chat=contactos.get(position).getTelefono().toString().replaceAll("[\\D]", "");
 
@@ -211,32 +212,7 @@ public class MostrarContactos extends AppCompatActivity {
 
 
 
-    private void guardarUsuario(String telefono) {
-        StringRequest request=new StringRequest(Request.Method.POST, urlcrearusuario, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
 
-            }
-        }, new Response.ErrorListener(){
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error);
-
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parameters=new HashMap<>();
-                parameters.put("telefono", telefono);
-                parameters.put("nombre", "guardar");
-                return parameters;
-            }
-        };
-
-
-        requestQueue.add(request);
-    }
 
 
 
@@ -254,7 +230,8 @@ public class MostrarContactos extends AppCompatActivity {
                     JSONObject jsnobject = new JSONObject(response.toString());
                     JSONArray jsonArray = jsnobject.getJSONArray("usuario");
                     if (jsonArray.length()==0) {
-                        Toast.makeText(getBaseContext(), "El usuario no se encuentra registrado", Toast.LENGTH_LONG).show();
+                        Snackbar.make((View) findViewById(R.id.linearcontactos), "El usuario no se encuentra registrado", Snackbar.LENGTH_LONG).show();
+
                     } else {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject explrObject = jsonArray.getJSONObject(i);
@@ -271,7 +248,7 @@ public class MostrarContactos extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println(error);
+                Snackbar.make((View) findViewById(R.id.linearcontactos), error.toString(), Snackbar.LENGTH_LONG).show();
 
             }
         }) {
